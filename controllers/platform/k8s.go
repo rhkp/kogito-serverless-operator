@@ -60,6 +60,32 @@ func (action *serviceAction) CanHandle(platform *operatorapi.SonataFlowPlatform)
 	return platform.Status.IsReady()
 }
 
+func (action *serviceAction) createOrUpdateDBMigrationJob(ctx context.Context, client client.Client, platform *operatorapi.SonataFlowPlatform, pshDI services.PlatformServiceHandler, pshJS services.PlatformServiceHandler) error {
+	dbMigratorJob, err := NewDBMigratorJobData(ctx, action.client, platform, pshDI, pshJS)
+	if err != nil {
+		klog.V(log.E).InfoS("Error extracting db-migration job data: ", "error", err)
+		return err
+	}
+	klog.V(log.I).InfoS("***rhkp Extracted db-migation job data ")
+
+	job := dbMigratorJob.GetDBMigratorK8sJob(platform)
+	err = action.client.Create(ctx, job)
+	if err != nil {
+		klog.V(log.E).InfoS("Error executing db-migration job: ", "error", err)
+		return err
+	}
+	klog.V(log.I).InfoS("***rhkp Got db-migation k8s job")
+
+	err = dbMigratorJob.MonitorCompletionOfDBMigratorJob(ctx, client, platform)
+	if err != nil {
+		klog.V(log.E).InfoS("Error monitoring completion of db-migration job: ", "error", err)
+		return err
+	}
+	klog.V(log.I).InfoS("***rhkp Monitoring done for db-migation k8s job")
+
+	return nil
+}
+
 func (action *serviceAction) Handle(ctx context.Context, platform *operatorapi.SonataFlowPlatform) (*operatorapi.SonataFlowPlatform, error) {
 	// Refresh applied configuration
 	if err := CreateOrUpdateWithDefaults(ctx, platform, false); err != nil {
@@ -67,13 +93,19 @@ func (action *serviceAction) Handle(ctx context.Context, platform *operatorapi.S
 	}
 
 	psDI := services.NewDataIndexHandler(platform)
+	psJS := services.NewJobServiceHandler(platform)
+
+	if services.IsJobBasedDBMigration(platform) {
+		klog.V(log.I).InfoS("***rhkp starting DB Mig Job: ")
+		action.createOrUpdateDBMigrationJob(ctx, action.client, platform, psDI, psJS)
+	}
+
 	if psDI.IsServiceSetInSpec() {
 		if err := createOrUpdateServiceComponents(ctx, action.client, platform, psDI); err != nil {
 			return nil, err
 		}
 	}
 
-	psJS := services.NewJobServiceHandler(platform)
 	if psJS.IsServiceSetInSpec() {
 		if err := createOrUpdateServiceComponents(ctx, action.client, platform, psJS); err != nil {
 			return nil, err

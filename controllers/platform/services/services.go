@@ -521,6 +521,13 @@ func isServicesSet(platform *operatorapi.SonataFlowPlatform) bool {
 	return platform != nil && platform.Spec.Services != nil
 }
 
+func IsJobBasedDBMigration(platform *operatorapi.SonataFlowPlatform) bool {
+	if platform != nil && platform.Spec.Services != nil {
+		return platform.Spec.Services.JobBasedDbMigration
+	}
+	return false
+}
+
 func GenerateServiceURL(protocol string, namespace string, name string) string {
 	var serviceUrl string
 	if len(namespace) > 0 {
