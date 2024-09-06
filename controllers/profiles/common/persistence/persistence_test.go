@@ -30,7 +30,7 @@ func TestResolveWorkflowPersistenceProperties_WithWorkflowPersistence(t *testing
 		},
 	}
 	platform := operatorapi.SonataFlowPlatform{}
-	testResolveWorkflowPersistencePropertiesWithPersistence(t, &workflow, &platform)
+	testResolveWorkflowPersistencePropertiesWithPersistence(t, &workflow, &platform, 4)
 }
 
 func TestResolveWorkflowPersistenceProperties_WithPlatformPersistence(t *testing.T) {
@@ -42,7 +42,7 @@ func TestResolveWorkflowPersistenceProperties_WithPlatformPersistence(t *testing
 			},
 		},
 	}
-	testResolveWorkflowPersistencePropertiesWithPersistence(t, &workflow, &platform)
+	testResolveWorkflowPersistencePropertiesWithPersistence(t, &workflow, &platform, 3)
 }
 
 func TestResolveWorkflowPersistenceProperties_WithPlatformPersistenceButBannedInWorkflow(t *testing.T) {
@@ -70,11 +70,11 @@ func TestResolveWorkflowPersistenceProperties_WithNoPersistence(t *testing.T) {
 	assert.Equal(t, 0, props.Len())
 }
 
-func testResolveWorkflowPersistencePropertiesWithPersistence(t *testing.T, workflow *operatorapi.SonataFlow, platform *operatorapi.SonataFlowPlatform) {
+func testResolveWorkflowPersistencePropertiesWithPersistence(t *testing.T, workflow *operatorapi.SonataFlow, platform *operatorapi.SonataFlowPlatform, expectedProps int) {
 	props, err := ResolveWorkflowPersistenceProperties(workflow, platform)
 	assert.Nil(t, err)
 	assert.NotNil(t, props)
-	assert.Equal(t, 3, props.Len())
+	assert.Equal(t, expectedProps, props.Len())
 	value, _ := props.Get("kogito.persistence.type")
 	assert.Equal(t, "jdbc", value)
 	value, _ = props.Get("quarkus.datasource.db-kind")

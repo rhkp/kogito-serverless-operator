@@ -16,6 +16,7 @@ package persistence
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/apache/incubator-kie-kogito-serverless-operator/controllers/cfg"
 	"github.com/apache/incubator-kie-kogito-serverless-operator/controllers/profiles"
@@ -162,6 +163,9 @@ func GetPostgreSQLWorkflowProperties(workflow *operatorapi.SonataFlow) *properti
 		// build-time properties for kogito-runtimes to use jdbc
 		props.Set(KogitoPersistenceType, JDBCPersistenceType)
 		props.Set(KogitoPersistenceProtoMarshaller, "false")
+		if workflow.Spec.Persistence != nil {
+			props.Set(QuarkusFlywayMigrateAtStart, strconv.FormatBool(workflow.Spec.Persistence.MigrateDBOnStartUp))
+		}
 	}
 	return props
 }
