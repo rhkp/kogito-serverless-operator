@@ -101,7 +101,7 @@ func NewDBMigratorJobData(ctx context.Context, client client.Client, platform *o
 func (dbmj DBMigratorJob) GetDBMigratorK8sJob(platform *operatorapi.SonataFlowPlatform) *batchv1.Job {
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: jobName,
+			Name:      jobName,
 			Namespace: platform.Namespace,
 		},
 		Spec: batchv1.JobSpec{
@@ -176,7 +176,7 @@ func (dbmj DBMigratorJob) MonitorCompletionOfDBMigratorJob(ctx context.Context, 
 		}
 		klog.V(log.I).InfoS("rhkp started to monitor the db migration job: ", "error", err)
 
-		klog.V(log.I).InfoS("rhkp db migration job status: ", "active", job.Status.Active, "ready", job.Status.Ready, "failed", job.Status.Failed, "success", job.Status.Succeeded,  "CompletedIndexes", job.Status.CompletedIndexes, "terminatedPods", job.Status.UncountedTerminatedPods, )
+		klog.V(log.I).InfoS("rhkp db migration job status: ", "active", job.Status.Active, "ready", job.Status.Ready, "failed", job.Status.Failed, "success", job.Status.Succeeded, "CompletedIndexes", job.Status.CompletedIndexes, "terminatedPods", job.Status.UncountedTerminatedPods)
 		if job.Status.Failed > 0 {
 			klog.V(log.E).InfoS("DB migrator job failed")
 			return errors.New("DB migrator job failed and could not complete")
