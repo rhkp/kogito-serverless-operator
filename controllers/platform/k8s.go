@@ -60,7 +60,26 @@ func (action *serviceAction) CanHandle(platform *operatorapi.SonataFlowPlatform)
 	return platform.Status.IsReady()
 }
 
+// checkNReportInconsistentDBMigrationFlags emit warning in logs, if Job based migration is true and also DI/JS migrateDBOnStartUp is true, does not return error
+func (action *serviceAction) checkNReportInconsistentDBMigrationFlags(platform *operatorapi.SonataFlowPlatform, pshDI services.PlatformServiceHandler, pshJS services.PlatformServiceHandler) {
+	isJobBasedDBMigration := services.IsJobBasedDBMigration(platform)
+	diMigrateDBOnStartUp := false
+	jsMigrateDBOnStartUp := false
+	if pshDI.IsPersistenceSetInSpec() {
+		diMigrateDBOnStartUp = platform.Spec.Services.DataIndex.Persistence.MigrateDBOnStartUp
+	}
+
+	if pshJS.IsPersistenceSetInSpec() {
+		jsMigrateDBOnStartUp = platform.Spec.Services.JobService.Persistence.MigrateDBOnStartUp
+	}
+
+	if isJobBasedDBMigration && (diMigrateDBOnStartUp || jsMigrateDBOnStartUp) {
+		klog.V(log.W).InfoS("Inconsistent DB migration flags detected and it may cause unexpected errors or behaviours, please check SonataFlowPlatform deployment: ", "jobBasedDBMigration", isJobBasedDBMigration, "diMigrateDBOnStartUp", diMigrateDBOnStartUp, "jsMigrateDBOnStartUp", jsMigrateDBOnStartUp)
+	}
+}
+
 func (action *serviceAction) createOrUpdateDBMigrationJob(ctx context.Context, client client.Client, platform *operatorapi.SonataFlowPlatform, pshDI services.PlatformServiceHandler, pshJS services.PlatformServiceHandler) error {
+	action.checkNReportInconsistentDBMigrationFlags(platform, pshDI, pshJS)
 	dbMigratorJob, err := NewDBMigratorJobData(ctx, action.client, platform, pshDI, pshJS)
 	if err != nil {
 		klog.V(log.E).InfoS("Error extracting db-migration job data: ", "error", err)

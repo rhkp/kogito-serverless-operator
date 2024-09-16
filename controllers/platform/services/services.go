@@ -90,6 +90,8 @@ type PlatformServiceHandler interface {
 	IsServiceSetInSpec() bool
 	// IsServiceEnabledInSpec returns true if the service is enabled in the spec.
 	IsServiceEnabledInSpec() bool
+	// IsPersistenceSetInSpec returns true if the service has persistence set in the spec.
+	IsPersistenceSetInSpec() bool
 	// GetLocalServiceBaseUrl returns the base url of the local service
 	GetLocalServiceBaseUrl() string
 	// GetServiceBaseUrl returns the base url of the service, based on whether using local or cluster-scoped service.
@@ -169,6 +171,11 @@ func (d *DataIndexHandler) IsServiceEnabledInSpec() bool {
 }
 
 func (d *DataIndexHandler) isServiceEnabledInStatus() bool {
+func (d DataIndexHandler) IsPersistenceSetInSpec() bool {
+	return d.IsServiceSetInSpec() && d.platform.Spec.Services.DataIndex.Persistence != nil
+}
+
+func (d DataIndexHandler) isServiceEnabledInStatus() bool {
 	return d.platform != nil && d.platform.Status.ClusterPlatformRef != nil &&
 		d.platform.Status.ClusterPlatformRef.Services != nil && d.platform.Status.ClusterPlatformRef.Services.DataIndexRef != nil &&
 		!isServicesSet(d.platform)
@@ -352,6 +359,11 @@ func (j *JobServiceHandler) IsServiceEnabledInSpec() bool {
 }
 
 func (j *JobServiceHandler) isServiceEnabledInStatus() bool {
+func (j JobServiceHandler) IsPersistenceSetInSpec() bool {
+	return j.IsServiceSetInSpec() && j.platform.Spec.Services.DataIndex.Persistence != nil
+}
+
+func (j JobServiceHandler) isServiceEnabledInStatus() bool {
 	return j.platform != nil && j.platform.Status.ClusterPlatformRef != nil &&
 		j.platform.Status.ClusterPlatformRef.Services != nil && j.platform.Status.ClusterPlatformRef.Services.JobServiceRef != nil &&
 		!isServicesSet(j.platform)
