@@ -22,6 +22,9 @@ package platform
 import (
 	"context"
 	"errors"
+	"strconv"
+	"time"
+
 	operatorapi "github.com/apache/incubator-kie-kogito-serverless-operator/api/v1alpha08"
 	"github.com/apache/incubator-kie-kogito-serverless-operator/container-builder/client"
 	"github.com/apache/incubator-kie-kogito-serverless-operator/controllers/platform/services"
@@ -31,8 +34,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/pointer"
-	"strconv"
-	"time"
 )
 
 const (

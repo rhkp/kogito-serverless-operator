@@ -133,7 +133,7 @@ type SonataFlowPlatformTriggerRef struct {
 	//+operator-sdk:csv:customresourcedefinitions:type=spec,displayName="Trigger_NS"
 	Namespace string `json:"namespace"`
 	//+operator-sdk:csv:customresourcedefinitions:type=status,displayName="dbMigrationStatus"
-	SonataFlowPlatformDBMigrationStatus *SonataFlowPlatformDBMigrationStatus `json:"clusterPlatformRef,omitempty"`
+	SonataFlowPlatformDBMigrationStatus *SonataFlowPlatformDBMigrationStatus `json:"sonataFlowPlatformDBMigrationStatus,omitempty"`
 }
 
 // SonataFlowClusterPlatformRefStatus information related to the (optional) active SonataFlowClusterPlatform

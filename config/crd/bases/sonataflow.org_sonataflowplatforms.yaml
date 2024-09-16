@@ -16533,9 +16533,47 @@ spec:
                 - openshift
                 type: string
               clusterPlatformRef:
+                description: ClusterPlatformRef information related to the (optional)
+                  active SonataFlowClusterPlatform
                 properties:
-                  dbMigrationStatus:
+                  name:
+                    description: Name of the active SonataFlowClusterPlatform
                     type: string
+                  platformRef:
+                    description: PlatformRef displays which SonataFlowPlatform has
+                      been referenced by the active SonataFlowClusterPlatform
+                    properties:
+                      name:
+                        description: Name of the SonataFlowPlatform
+                        type: string
+                      namespace:
+                        description: Namespace of the SonataFlowPlatform
+                        type: string
+                    required:
+                    - name
+                    - namespace
+                    type: object
+                  services:
+                    description: Services displays which cluster-wide services are
+                      being used by this SonataFlowPlatform
+                    properties:
+                      dataIndexRef:
+                        description: DataIndexRef displays information on the cluster-wide
+                          Data Index service
+                        properties:
+                          url:
+                            description: Url displays the base url of the service
+                            type: string
+                        type: object
+                      jobServiceRef:
+                        description: JobServiceRef displays information on the cluster-wide
+                          Job Service
+                        properties:
+                          url:
+                            description: Url displays the base url of the service
+                            type: string
+                        type: object
+                    type: object
                 type: object
               conditions:
                 description: The latest available observations of a resource's current
@@ -16592,6 +16630,11 @@ spec:
                   - namespace
                   type: object
                 type: array
+              sonataFlowPlatformDBMigrationStatus:
+                properties:
+                  dbMigrationStatus:
+                    type: string
+                type: object
               version:
                 description: Version the operator version controlling this Platform
                 type: string
