@@ -92,6 +92,17 @@ const (
 	PlatformDuplicatedReason = "Duplicated"
 )
 
+const (
+	DBMigrationStatusStarted    = "Started"
+	DBMigrationStatusInProgress = "In-Progress"
+	DBMigrationStatusSucceeded  = "Succeeded"
+	DBMigrationStatusFailed     = "Failed"
+)
+
+type SonataFlowPlatformDBMigrationStatus struct {
+	Status string `json:"dbMigrationStatus,omitempty"`
+}
+
 // SonataFlowPlatformStatus defines the observed state of SonataFlowPlatform
 // +k8s:openapi-gen=true
 type SonataFlowPlatformStatus struct {
@@ -121,6 +132,8 @@ type SonataFlowPlatformTriggerRef struct {
 	// Namespace of the Trigger
 	//+operator-sdk:csv:customresourcedefinitions:type=spec,displayName="Trigger_NS"
 	Namespace string `json:"namespace"`
+	//+operator-sdk:csv:customresourcedefinitions:type=status,displayName="dbMigrationStatus"
+	SonataFlowPlatformDBMigrationStatus *SonataFlowPlatformDBMigrationStatus `json:"clusterPlatformRef,omitempty"`
 }
 
 // SonataFlowClusterPlatformRefStatus information related to the (optional) active SonataFlowClusterPlatform

@@ -66,7 +66,7 @@ func (action *serviceAction) createOrUpdateDBMigrationJob(ctx context.Context, c
 		klog.V(log.E).InfoS("Error extracting db-migration job data: ", "error", err)
 		return err
 	}
-	klog.V(log.I).InfoS("***rhkp Extracted db-migation job data ")
+	klog.V(log.I).InfoS("Extracted db-migation job data ")
 
 	job := dbMigratorJob.GetDBMigratorK8sJob(platform)
 	if op, err := controllerutil.CreateOrUpdate(ctx, client, job, func() error {
@@ -74,21 +74,21 @@ func (action *serviceAction) createOrUpdateDBMigrationJob(ctx context.Context, c
 	}); err != nil {
 		return err
 	} else {
-		klog.V(log.I).InfoS("***rhkp Job successfully completed", "operation", op)
+		klog.V(log.I).InfoS("DB Migration Job successfully completed", "operation", op)
 	}
 
 	if err != nil {
 		klog.V(log.E).InfoS("Error executing db-migration job: ", "error", err)
 		return err
 	}
-	klog.V(log.I).InfoS("***rhkp Got db-migation k8s job")
+	klog.V(log.I).InfoS("Got db-migration k8s job")
 
 	err = dbMigratorJob.MonitorCompletionOfDBMigratorJob(ctx, client, platform)
 	if err != nil {
 		klog.V(log.E).InfoS("Error monitoring completion of db-migration job: ", "error", err)
 		return err
 	}
-	klog.V(log.I).InfoS("***rhkp Monitoring done for db-migation k8s job")
+	klog.V(log.I).InfoS("Monitoring completed for db-migation k8s job")
 
 	return nil
 }
@@ -104,7 +104,7 @@ func (action *serviceAction) Handle(ctx context.Context, platform *operatorapi.S
 
 	// Invoke DB Migration only if both or either DI/JS services are requested, in addition to jobBasedDBMigration
 	if services.IsJobBasedDBMigration(platform) && (psDI.IsServiceSetInSpec() || psJS.IsServiceSetInSpec()) {
-		klog.V(log.I).InfoS("***rhkp starting DB Mig Job: ")
+		klog.V(log.I).InfoS("Starting DB Migration Job: ")
 		action.createOrUpdateDBMigrationJob(ctx, action.client, platform, psDI, psJS)
 	}
 
