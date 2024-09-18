@@ -66,22 +66,18 @@ func NewDBMigratorJobData(ctx context.Context, client client.Client, platform *o
 	quarkusDatasourceJobsservicePassword := ""
 	quarkusFlywayJobsserviceSchemas := ""
 
-	migrateDbDataindex := pshDI.IsServiceEnabledInSpec() //TBD && migrateDBONStartUp
+	migrateDbDataindex := pshDI.IsServiceEnabledInSpec()
 	if migrateDbDataindex {
 		quarkusDatasourceDataindexJdbcUrl = platform.Spec.Services.DataIndex.Persistence.PostgreSQL.JdbcUrl
-		quarkusDatasourceDataindexUsername, _ = services.GetSecretKeyValueString(ctx, client, "postgres-secrets", //TBD
-			platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.UserKey, platform)
-		quarkusDatasourceDataindexPassword, _ = services.GetSecretKeyValueString(ctx, client, "postgres-secrets",
-			platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.PasswordKey, platform)
+		quarkusDatasourceDataindexUsername, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.UserKey, platform)
+		quarkusDatasourceDataindexPassword, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.PasswordKey, platform)
 		quarkusFlywayDataindexSchemas = "di" //TBD
 	}
-	migrateDbJobsservice := pshJS.IsServiceEnabledInSpec() //TBD && migrateDBONStartUp
+	migrateDbJobsservice := pshJS.IsServiceEnabledInSpec()
 	if migrateDbJobsservice {
 		quarkusDatasourceJobsserviceJdbcUrl = platform.Spec.Services.JobService.Persistence.PostgreSQL.JdbcUrl
-		quarkusDatasourceJobsserviceUsername, _ = services.GetSecretKeyValueString(ctx, client, "postgres-secrets",
-			platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.UserKey, platform)
-		quarkusDatasourceJobsservicePassword, _ = services.GetSecretKeyValueString(ctx, client, "postgres-secrets",
-			platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.PasswordKey, platform)
+		quarkusDatasourceJobsserviceUsername, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.UserKey, platform)
+		quarkusDatasourceJobsservicePassword, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.PasswordKey, platform)
 		quarkusFlywayJobsserviceSchemas = "js" //TBD
 	}
 
