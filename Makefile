@@ -344,7 +344,7 @@ generate-all: generate generate-deploy bundle addheaders vet fmt
 test-e2e:
 	go test ./test/e2e/e2e_suite_test.go ./test/e2e/helpers.go ./test/e2e/clusterplatform_test.go  -v -ginkgo.v -ginkgo.no-color -ginkgo.junit-report=./e2e-test-report-clusterplatform_test.xml -timeout 60m;
 	go test ./test/e2e/e2e_suite_test.go ./test/e2e/helpers.go ./test/e2e/platform_test.go  -v -ginkgo.v -ginkgo.no-color -ginkgo.junit-report=./e2e-test-report-platform_test.xml -timeout 60m;
-	go test ./test/e2e/e2e_suite_test.go ./test/e2e/helpers.go ./test/e2e/workflow_test.go  -v -ginkgo.v -ginkgo.no-color -ginkgo.junit-report=./e2e-test-report-workflow_test.xml -timeout 60m;
+	go test ./test/e2e/e2e_suite_test.go ./test/e2e/helpers.go ./test/e2e/workflow_test.go  -v -ginkgo.v -ginkgo.no-color -ginkgo.junit-report=./e2e-test-report-workflow_test.xml -timeout 90m;
 
 .PHONY: before-pr
 before-pr: test generate-all

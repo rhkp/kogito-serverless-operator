@@ -23,6 +23,7 @@ import (
 	"context"
 	"errors"
 	"strconv"
+	"strings"
 	"time"
 
 	operatorapi "github.com/apache/incubator-kie-kogito-serverless-operator/api/v1alpha08"
@@ -56,6 +57,30 @@ type DBMigratorJob struct {
 	quarkusFlywayJobsserviceSchemas      string
 }
 
+func getDBSchemaName(persistencePostgreSQL *operatorapi.PersistencePostgreSQL, defaultSchemaName string) string {
+	jdbcURL := persistencePostgreSQL.JdbcUrl
+
+	if len(jdbcURL) == 0 {
+		if persistencePostgreSQL.ServiceRef != nil && len(persistencePostgreSQL.ServiceRef.DatabaseSchema) > 0 {
+			return persistencePostgreSQL.ServiceRef.DatabaseSchema
+		}
+	} else {
+		_, a, found := strings.Cut(jdbcURL, "currentSchema=")
+
+		if found {
+			if strings.Contains(a, "&") {
+				b, _, found := strings.Cut(a, "&")
+				if found {
+					return b
+				}
+			} else {
+				return a
+			}
+		}
+	}
+	return defaultSchemaName
+}
+
 func NewDBMigratorJobData(ctx context.Context, client client.Client, platform *operatorapi.SonataFlowPlatform, pshDI services.PlatformServiceHandler, pshJS services.PlatformServiceHandler) (*DBMigratorJob, error) {
 	quarkusDatasourceDataindexJdbcUrl := ""
 	quarkusDatasourceDataindexUsername := ""
@@ -71,14 +96,14 @@ func NewDBMigratorJobData(ctx context.Context, client client.Client, platform *o
 		quarkusDatasourceDataindexJdbcUrl = platform.Spec.Services.DataIndex.Persistence.PostgreSQL.JdbcUrl
 		quarkusDatasourceDataindexUsername, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.UserKey, platform)
 		quarkusDatasourceDataindexPassword, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.DataIndex.Persistence.PostgreSQL.SecretRef.PasswordKey, platform)
-		quarkusFlywayDataindexSchemas = "di" //TBD
+		quarkusFlywayDataindexSchemas = getDBSchemaName(platform.Spec.Services.DataIndex.Persistence.PostgreSQL, "defaultDi")
 	}
 	migrateDbJobsservice := pshJS.IsServiceEnabledInSpec()
 	if migrateDbJobsservice {
 		quarkusDatasourceJobsserviceJdbcUrl = platform.Spec.Services.JobService.Persistence.PostgreSQL.JdbcUrl
 		quarkusDatasourceJobsserviceUsername, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.UserKey, platform)
 		quarkusDatasourceJobsservicePassword, _ = services.GetSecretKeyValueString(ctx, client, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.Name, platform.Spec.Services.JobService.Persistence.PostgreSQL.SecretRef.PasswordKey, platform)
-		quarkusFlywayJobsserviceSchemas = "js" //TBD
+		quarkusFlywayJobsserviceSchemas = getDBSchemaName(platform.Spec.Services.JobService.Persistence.PostgreSQL, "defaultJs")
 	}
 
 	return &DBMigratorJob{
