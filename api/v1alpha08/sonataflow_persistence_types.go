@@ -52,7 +52,6 @@ type PersistenceOptionsSpec struct {
 	PostgreSQL *PersistencePostgreSQL `json:"postgresql,omitempty"`
 
 	// Whether to migrate database on service startup?
-	// +optional
 	MigrateDBOnStartUp bool `json:"migrateDBOnStartUp"`
 }
 

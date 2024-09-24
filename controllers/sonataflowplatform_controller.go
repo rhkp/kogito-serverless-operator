@@ -142,7 +142,7 @@ func (r *SonataFlowPlatformReconciler) Reconcile(ctx context.Context, req reconc
 
 			klog.V(log.I).InfoS("Invoking action", "Name", a.Name())
 
-			_, err = a.Handle(ctx, target)
+			target, err = a.Handle(ctx, target)
 			if err != nil {
 				if target != nil {
 					target.Status.Manager().MarkFalse(api.SucceedConditionType, operatorapi.PlatformFailureReason, err.Error())
