@@ -122,6 +122,8 @@ type SonataFlowPlatformStatus struct {
 	// Triggers list of triggers created for the SonataFlowPlatform
 	//+operator-sdk:csv:customresourcedefinitions:type=status,displayName="triggers"
 	Triggers []SonataFlowPlatformTriggerRef `json:"triggers,omitempty"`
+	//+operator-sdk:csv:customresourcedefinitions:type=status,displayName="dbMigrationStatus"
+	SonataFlowPlatformDBMigrationStatus *SonataFlowPlatformDBMigrationStatus `json:"sonataFlowPlatformDBMigrationStatus,omitempty"`
 }
 
 // SonataFlowPlatformTriggerRef defines a trigger created for the SonataFlowPlatform.

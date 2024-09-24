@@ -170,7 +170,6 @@ func (d *DataIndexHandler) IsServiceEnabledInSpec() bool {
 	return isDataIndexEnabled(d.platform)
 }
 
-func (d *DataIndexHandler) isServiceEnabledInStatus() bool {
 func (d DataIndexHandler) IsPersistenceSetInSpec() bool {
 	return d.IsServiceSetInSpec() && d.platform.Spec.Services.DataIndex.Persistence != nil
 }
@@ -358,7 +357,6 @@ func (j *JobServiceHandler) IsServiceEnabledInSpec() bool {
 	return isJobServiceEnabled(j.platform)
 }
 
-func (j *JobServiceHandler) isServiceEnabledInStatus() bool {
 func (j JobServiceHandler) IsPersistenceSetInSpec() bool {
 	return j.IsServiceSetInSpec() && j.platform.Spec.Services.DataIndex.Persistence != nil
 }

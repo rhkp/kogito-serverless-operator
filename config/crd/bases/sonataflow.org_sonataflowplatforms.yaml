@@ -16609,6 +16609,11 @@ spec:
                 description: The generation observed by the deployment controller.
                 format: int64
                 type: integer
+              sonataFlowPlatformDBMigrationStatus:
+                properties:
+                  dbMigrationStatus:
+                    type: string
+                type: object
               triggers:
                 description: Triggers list of triggers created for the SonataFlowPlatform
                 items:
@@ -16621,16 +16626,16 @@ spec:
                     namespace:
                       description: Namespace of the Trigger
                       type: string
+                    sonataFlowPlatformDBMigrationStatus:
+                      properties:
+                        dbMigrationStatus:
+                          type: string
+                      type: object
                   required:
                   - name
                   - namespace
                   type: object
                 type: array
-              sonataFlowPlatformDBMigrationStatus:
-                properties:
-                  dbMigrationStatus:
-                    type: string
-                type: object
               version:
                 description: Version the operator version controlling this Platform
                 type: string
