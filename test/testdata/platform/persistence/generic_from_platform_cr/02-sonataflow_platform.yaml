@@ -28,10 +28,9 @@ spec:
         port: 5432
         databaseName: sonataflow
   services:
+    dbMigrationApproach: "services"
     dataIndex:
-      enabled: false
-      persistence:
-        migrateDBOnStartUp: true
+      enabled: true
       podTemplate:
         initContainers:
           - name: init-postgres
@@ -39,9 +38,7 @@ spec:
             imagePullPolicy: IfNotPresent
             command: [ 'sh', '-c', 'until (echo 1 > /dev/tcp/postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/5432) >/dev/null 2>&1; do echo "Waiting for postgres server"; sleep 3; done;' ]
     jobService:
-      enabled: false
-      persistence:
-        migrateDBOnStartUp: true
+      enabled: true
       podTemplate:
         initContainers:
           - name: init-postgres

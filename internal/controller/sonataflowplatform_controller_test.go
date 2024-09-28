@@ -275,18 +275,10 @@ func TestSonataFlowPlatformController(t *testing.T) {
 		ksp.Spec = v1alpha08.SonataFlowPlatformSpec{
 			Services: &v1alpha08.ServicesPlatformSpec{
 				DataIndex: &v1alpha08.DataIndexServiceSpec{
-					ServiceSpec: v1alpha08.ServiceSpec{
-						Persistence: &v1alpha08.PersistenceOptionsSpec{
-							MigrateDBOnStartUp: false,
-						},
-					},
+					ServiceSpec: v1alpha08.ServiceSpec{},
 				},
 				JobService: &v1alpha08.JobServiceServiceSpec{
-					ServiceSpec: v1alpha08.ServiceSpec{
-						Persistence: &v1alpha08.PersistenceOptionsSpec{
-							MigrateDBOnStartUp: false,
-						},
-					},
+					ServiceSpec: v1alpha08.ServiceSpec{},
 				},
 			},
 			Persistence: &v1alpha08.PlatformPersistenceOptionsSpec{

@@ -20,6 +20,16 @@ import (
 
 // ServicesPlatformSpec describes the desired service configuration for workflows without the `sonataflow.org/profile: dev` annotation.
 type ServicesPlatformSpec struct {
+	// job = use job based db migration
+	// jobDIOnly = use job based db migration, for DI only, do not migrate JS
+	// jobJSOnly = use job based db migration, for JS only, do not migrate DI
+	// services = use app based db migration
+	// serviceDIOnly = use service based db migration, for DI only, do not migrate JS
+	// serviceJSOnly = use service based db migration, for JS only, do not migrate DI
+	// none = no db migration needed whatsoever, neither job based nor service based
+	// +optional
+	DbMigrationApproach string `json:"dbMigrationApproach,omitempty"`
+
 	// Deploys the Data Index service for use by workflows without the `sonataflow.org/profile: dev` annotation.
 	// +optional
 	DataIndex *DataIndexServiceSpec `json:"dataIndex,omitempty"`

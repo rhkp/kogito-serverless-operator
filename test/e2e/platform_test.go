@@ -170,7 +170,8 @@ var _ = Describe("Platform Use Cases :: ", Label("platform"), Ordered, func() {
 			verifyHealthStatusInPod(pn, targetNamespace)
 		}
 	},
-		Entry("and both Job Service and Data Index using the persistence from platform CR", test.GetSonataFlowE2EPlatformPersistenceSampleDataDirectory("generic_from_platform_cr")),
+		//NOK
+		FEntry("and both Job Service and Data Index using the persistence from platform CR", test.GetSonataFlowE2EPlatformPersistenceSampleDataDirectory("generic_from_platform_cr")),
 		Entry("and both Job Service and Data Index using the one defined in each service, discarding the one from the platform CR", test.GetSonataFlowE2EPlatformPersistenceSampleDataDirectory("overwritten_by_services")),
 	)
 

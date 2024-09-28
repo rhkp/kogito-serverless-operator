@@ -50,11 +50,6 @@ type PersistenceOptionsSpec struct {
 	// Connect configured services to a postgresql database.
 	// +optional
 	PostgreSQL *PersistencePostgreSQL `json:"postgresql,omitempty"`
-
-	// Whether to migrate database on service startup?
-	// +optional
-	// +default: false
-	MigrateDBOnStartUp bool `json:"migrateDBOnStartUp"`
 }
 
 // PersistencePostgreSQL configure postgresql connection for service(s).

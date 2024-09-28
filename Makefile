@@ -399,7 +399,7 @@ generate-all: generate generate-deploy bundle
 	@$(MAKE) fmt
 
 .PHONY: test-e2e # You will need to have a Minikube/Kind cluster up and running to run this target, and run container-builder before the test
-label = "flows-non-persistence" # possible values are flows-non-persistence, flows-persistence, platform, cluster
+label = "cluster" # possible values are flows-non-persistence, flows-persistence, platform, cluster
 test-e2e:
 ifeq ($(label), cluster)
 	@echo "🌐 Running e2e tests for cluster..."

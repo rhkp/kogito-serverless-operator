@@ -23,10 +23,10 @@ spec:
       - name: QUARKUS_EXTENSIONS
         value: org.kie.kogito:kogito-addons-quarkus-jobs-knative-eventing:999-SNAPSHOT
   services:
+    dbMigrationApproach: "services"
     dataIndex:
       enabled: false
       persistence:
-        migrateDBOnStartUp: true
         postgresql:
           jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=data-index-service
           secretRef:
@@ -42,7 +42,6 @@ spec:
     jobService:
       enabled: false
       persistence:
-        migrateDBOnStartUp: true
         postgresql:
           jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=jobs-service
           secretRef:

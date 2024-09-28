@@ -1997,9 +1997,6 @@ spec:
                   for the workflow
                 maxProperties: 2
                 properties:
-                  migrateDBOnStartUp:
-                    description: Whether to migrate database on service startup?
-                    type: boolean
                   postgresql:
                     description: Connect configured services to a postgresql database.
                     maxProperties: 2

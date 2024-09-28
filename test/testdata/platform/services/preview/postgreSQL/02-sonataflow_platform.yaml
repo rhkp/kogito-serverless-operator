@@ -28,10 +28,10 @@ spec:
       strategyOptions:
         KanikoBuildCacheEnabled: "true"
   services:
+    dbMigrationApproach: "services"
     dataIndex:
       enabled: true
       persistence:
-        migrateDBOnStartUp: true
         postgresql:
           jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=data-index-service
           secretRef:
@@ -54,7 +54,6 @@ spec:
     jobService:
       enabled: true
       persistence:
-        migrateDBOnStartUp: true
         postgresql:
           jdbcUrl: jdbc:postgresql://postgres:5432/sonataflow?currentSchema=jobs-service
           secretRef:
